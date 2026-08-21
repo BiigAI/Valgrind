@@ -1,33 +1,69 @@
 <Project Sdk="Microsoft.NET.Sdk">
+
   <PropertyGroup>
-    <TargetFramework>net48</TargetFramework>
+    <TargetFramework>net472</TargetFramework>
     <AssemblyName>Valgrind</AssemblyName>
-    <Description>Dynamic Skill Drain Curve on Death for Valheim</Description>
-    <Version>1.0.0</Version>
+    <RootNamespace>Valgrind</RootNamespace>
+    <Description>Dynamic, progressive skill loss on death with Jötunn ServerSync for Valheim.</Description>
+    <Version>1.1.0</Version>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <LangVersion>latest</LangVersion>
-    <Nullable>disable</Nullable>
+    <Nullable>enable</Nullable>
+    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+    <Configurations>Debug;Release</Configurations>
     
-    <!-- Default path for Valheim on macOS (Steam) -->
-    <ValheimPath Condition="'$(ValheimPath)' == ''">$(HOME)/Library/Application Support/Steam/steamapps/common/Valheim</ValheimPath>
+    <!-- Default path for Valheim on macOS / Windows -->
+    <ValheimPath Condition="'$(ValheimPath)' == '' and Exists('$(HOME)/Library/Application Support/Steam/steamapps/common/Valheim')">$(HOME)/Library/Application Support/Steam/steamapps/common/Valheim</ValheimPath>
+    <ValheimPath Condition="'$(ValheimPath)' == '' and Exists('C:\Program Files (x86)\Steam\steamapps\common\Valheim')">C:\Program Files (x86)\Steam\steamapps\common\Valheim</ValheimPath>
 
     <!-- Configure MSBuild to search directories for assemblies sequentially -->
     <AssemblySearchPaths>
       $(AssemblySearchPaths);
       libs;
       $(ValheimPath)/BepInEx/core;
+      $(ValheimPath)/BepInEx/plugins;
+      $(ValheimPath)/BepInEx/plugins/Jotunn;
       $(ValheimPath)/Valheim.app/Contents/Resources/Data/Managed;
       $(ValheimPath)/valheim_Data/Managed;
     </AssemblySearchPaths>
   </PropertyGroup>
 
   <ItemGroup>
-    <!-- References are resolved dynamically using AssemblySearchPaths -->
-    <Reference Include="BepInEx" />
-    <Reference Include="0Harmony" />
-    <Reference Include="UnityEngine" />
-    <Reference Include="UnityEngine.CoreModule" />
-    <Reference Include="assembly_valheim" />
-    <Reference Include="assembly_utils" />
+    <!-- Build-time reference assemblies for .NET Framework -->
+    <PackageReference Include="Microsoft.NETFramework.ReferenceAssemblies" Version="1.0.3">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
+    </PackageReference>
+    <!-- Official Jotunn NuGet package (for build environments with NuGet access) -->
+    <PackageReference Include="JotunnLib" Version="2.23.0" />
   </ItemGroup>
+
+  <ItemGroup>
+    <!-- Fallback / direct binary references -->
+    <Reference Include="BepInEx">
+      <HintPath>libs\BepInEx.dll</HintPath>
+      <Private>false</Private>
+    </Reference>
+    <Reference Include="0Harmony">
+      <HintPath>libs\0Harmony.dll</HintPath>
+      <Private>false</Private>
+    </Reference>
+    <Reference Include="UnityEngine">
+      <HintPath>libs\UnityEngine.dll</HintPath>
+      <Private>false</Private>
+    </Reference>
+    <Reference Include="UnityEngine.CoreModule">
+      <HintPath>libs\UnityEngine.CoreModule.dll</HintPath>
+      <Private>false</Private>
+    </Reference>
+    <Reference Include="assembly_valheim">
+      <HintPath>libs\assembly_valheim.dll</HintPath>
+      <Private>false</Private>
+    </Reference>
+    <Reference Include="assembly_utils">
+      <HintPath>libs\assembly_utils.dll</HintPath>
+      <Private>false</Private>
+    </Reference>
+  </ItemGroup>
+
 </Project>
