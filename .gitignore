@@ -1,0 +1,47 @@
+# Build output
+bin/
+obj/
+publish/
+dist/
+*.nupkg
+*.snupkg
+
+# Referenced game DLLs (copy from game install - do not commit)
+libs/
+
+# BepInEx auto-generated files and logs
+BepInEx/
+*.log
+
+# IDE & Editor files
+.vs/
+.idea/
+.vscode/
+.fleet/
+*.user
+*.suo
+*.userprefs
+*.sln.docstates
+*.DotSettings.user
+_ReSharper.Caches/
+
+# Test & Diagnostics
+[Tt]est[Rr]esults/
+*.dmp
+*.stackdump
+
+# OS metadata
+.DS_Store
+Thumbs.db
+[Dd]esktop.ini
+ehthumbs.db
+._*
+.Spotlight-V100
+.Trashes
+
+# Thunderstore packaging output
+Thunderstore/*.zip
+Thunderstore/staging/
+thunderstore/*.zip
+thunderstore/staging/
+*.zip

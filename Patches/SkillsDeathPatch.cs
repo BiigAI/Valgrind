@@ -10,9 +10,9 @@ namespace Valgrind.Patches
         [HarmonyPrefix]
         public static bool Prefix(Skills __instance)
         {
-            if (__instance == null || __instance.m_skillData == null)
+            if (__instance == null)
             {
-                // Fall back to vanilla if skills data is unexpectedly null
+                // Fall back to vanilla if skills instance is unexpectedly null
                 return true;
             }
 

@@ -16,21 +16,21 @@ namespace Valgrind.Configuration
     public static class ModConfig
     {
         // ── General Settings ───────────────────────────────────────────────────
-        public static ConfigEntry<CalculationMode> CalculationModeEntry { get; private set; }
-        public static ConfigEntry<bool> UseTopNSkillsOnly { get; private set; }
-        public static ConfigEntry<int> TopNSkillsCount { get; private set; }
-        public static ConfigEntry<bool> ResetAccumulatorOnDeath { get; private set; }
-        public static ConfigEntry<bool> EnableDebugLogging { get; private set; }
+        public static ConfigEntry<CalculationMode> CalculationModeEntry { get; private set; } = null!;
+        public static ConfigEntry<bool> UseTopNSkillsOnly { get; private set; } = null!;
+        public static ConfigEntry<int> TopNSkillsCount { get; private set; } = null!;
+        public static ConfigEntry<bool> ResetAccumulatorOnDeath { get; private set; } = null!;
+        public static ConfigEntry<bool> EnableDebugLogging { get; private set; } = null!;
 
         // ── Tiered Brackets Settings ───────────────────────────────────────────
-        public static ConfigEntry<float> EarlyGameLossPercent { get; private set; }
-        public static ConfigEntry<float> MidGameLossPercent { get; private set; }
-        public static ConfigEntry<float> LateGameLossPercent { get; private set; }
-        public static ConfigEntry<float> EndgameLossPercent { get; private set; }
+        public static ConfigEntry<float> EarlyGameLossPercent { get; private set; } = null!;
+        public static ConfigEntry<float> MidGameLossPercent { get; private set; } = null!;
+        public static ConfigEntry<float> LateGameLossPercent { get; private set; } = null!;
+        public static ConfigEntry<float> EndgameLossPercent { get; private set; } = null!;
 
         // ── Continuous Curve Settings ──────────────────────────────────────────
-        public static ConfigEntry<float> CurveMaxLossPercent { get; private set; }
-        public static ConfigEntry<float> CurveMinLossPercent { get; private set; }
+        public static ConfigEntry<float> CurveMaxLossPercent { get; private set; } = null!;
+        public static ConfigEntry<float> CurveMinLossPercent { get; private set; } = null!;
 
         public static void Initialize(ConfigFile config)
         {
@@ -43,7 +43,7 @@ namespace Valgrind.Configuration
                     "Method used to calculate dynamic skill loss on death:\n" +
                     "- TieredBrackets: Discrete loss % based on overall average skill level.\n" +
                     "- ContinuousCurve: Smooth linear/curved scaling between Max and Min loss % based on average skill.\n" +
-                    "- PerSkill: Calculates loss percentage for each individual skill based on its own level.",
+                    "- PerSkill: Evaluates each skill independently against the Tiered Brackets based on its own level (instead of character average).",
                     null,
                     new ConfigurationManagerAttributes { IsAdminOnly = true }
                 )

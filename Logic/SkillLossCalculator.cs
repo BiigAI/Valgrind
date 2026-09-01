@@ -13,7 +13,13 @@ namespace Valgrind.Logic
         /// </summary>
         public static void ApplyDeathPenalty(Skills skills)
         {
-            if (skills == null || skills.m_skillData == null || skills.m_skillData.Count == 0)
+            if (skills == null)
+            {
+                return;
+            }
+
+            List<Skills.Skill> skillList = skills.GetSkillList();
+            if (skillList == null || skillList.Count == 0)
             {
                 return;
             }
@@ -24,20 +30,20 @@ namespace Valgrind.Logic
 
             if (mode == CalculationMode.PerSkill)
             {
-                ApplyPerSkillDeathPenalty(skills, resetAccumulator, debug);
+                ApplyPerSkillDeathPenalty(skillList, resetAccumulator, debug);
             }
             else
             {
-                ApplyPlayerWideDeathPenalty(skills, mode, resetAccumulator, debug);
+                ApplyPlayerWideDeathPenalty(skillList, mode, resetAccumulator, debug);
             }
         }
 
         /// <summary>
         /// Calculates player-wide average skill level and applies a uniform dynamic multiplier to all skills.
         /// </summary>
-        private static void ApplyPlayerWideDeathPenalty(Skills skills, CalculationMode mode, bool resetAccumulator, bool debug)
+        private static void ApplyPlayerWideDeathPenalty(List<Skills.Skill> skillList, CalculationMode mode, bool resetAccumulator, bool debug)
         {
-            float avgLevel = CalculateAverageSkillLevel(skills);
+            float avgLevel = CalculateAverageSkillLevel(skillList);
             float lossPercent;
 
             if (mode == CalculationMode.ContinuousCurve)
@@ -58,9 +64,8 @@ namespace Valgrind.Logic
                 );
             }
 
-            foreach (KeyValuePair<Skills.SkillType, Skills.Skill> kvp in skills.m_skillData)
+            foreach (Skills.Skill skill in skillList)
             {
-                Skills.Skill skill = kvp.Value;
                 if (skill != null && skill.m_level > 0f)
                 {
                     float oldLevel = skill.m_level;
@@ -74,7 +79,7 @@ namespace Valgrind.Logic
                     if (debug)
                     {
                         ValgrindPlugin.Log.LogInfo(
-                            $"[SkillLossCalculator] Skill {kvp.Key}: {oldLevel:F2} -> {skill.m_level:F2}"
+                            $"[SkillLossCalculator] Skill {skill.m_info?.m_skill.ToString() ?? "Unknown"}: {oldLevel:F2} -> {skill.m_level:F2}"
                         );
                     }
                 }
@@ -84,16 +89,15 @@ namespace Valgrind.Logic
         /// <summary>
         /// Evaluates and reduces each skill independently based on its own level.
         /// </summary>
-        private static void ApplyPerSkillDeathPenalty(Skills skills, bool resetAccumulator, bool debug)
+        private static void ApplyPerSkillDeathPenalty(List<Skills.Skill> skillList, bool resetAccumulator, bool debug)
         {
             if (debug)
             {
                 ValgrindPlugin.Log.LogInfo($"[SkillLossCalculator] Applying Per-Skill death penalty. ResetAccumulator={resetAccumulator}");
             }
 
-            foreach (KeyValuePair<Skills.SkillType, Skills.Skill> kvp in skills.m_skillData)
+            foreach (Skills.Skill skill in skillList)
             {
-                Skills.Skill skill = kvp.Value;
                 if (skill != null && skill.m_level > 0f)
                 {
                     float lossPercent = GetTierLossPercent(skill.m_level);
@@ -110,7 +114,7 @@ namespace Valgrind.Logic
                     if (debug)
                     {
                         ValgrindPlugin.Log.LogInfo(
-                            $"[SkillLossCalculator] Skill {kvp.Key} (Level {oldLevel:F2}): Loss {lossPercent:F2}% -> New Level {skill.m_level:F2}"
+                            $"[SkillLossCalculator] Skill {skill.m_info?.m_skill.ToString() ?? "Unknown"} (Level {oldLevel:F2}): Loss {lossPercent:F2}% -> New Level {skill.m_level:F2}"
                         );
                     }
                 }
@@ -120,16 +124,15 @@ namespace Valgrind.Logic
         /// <summary>
         /// Calculates the player's average skill level across active/discovered skills or top N skills.
         /// </summary>
-        public static float CalculateAverageSkillLevel(Skills skills)
+        public static float CalculateAverageSkillLevel(List<Skills.Skill> skillList)
         {
-            if (skills?.m_skillData == null || skills.m_skillData.Count == 0)
+            if (skillList == null || skillList.Count == 0)
                 return 0f;
 
             var activeLevels = new List<float>();
 
-            foreach (KeyValuePair<Skills.SkillType, Skills.Skill> kvp in skills.m_skillData)
+            foreach (Skills.Skill skill in skillList)
             {
-                Skills.Skill skill = kvp.Value;
                 if (skill != null && skill.m_level > 0f)
                 {
                     activeLevels.Add(skill.m_level);
