@@ -1,6 +1,6 @@
 {
   "name": "Valgrind",
-  "version_number": "1.0.0",
+  "version_number": "1.0.1",
   "website_url": "https://github.com/BiigAI/Valgrind",
   "description": "Dynamic, progressive skill loss on death with Jötunn ServerSync for Valheim.",
   "dependencies": [

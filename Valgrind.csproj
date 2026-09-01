@@ -5,7 +5,7 @@
     <AssemblyName>Valgrind</AssemblyName>
     <RootNamespace>Valgrind</RootNamespace>
     <Description>Dynamic, progressive skill loss on death with Jötunn ServerSync for Valheim.</Description>
-    <Version>1.0.0</Version>
+    <Version>1.0.1</Version>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <LangVersion>latest</LangVersion>
     <Nullable>enable</Nullable>

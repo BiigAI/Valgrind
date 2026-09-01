@@ -15,7 +15,7 @@ namespace Valgrind
     {
         public const string PluginGUID = "com.bigai.valgrind";
         public const string PluginName = "Valgrind";
-        public const string PluginVersion = "1.0.0";
+        public const string PluginVersion = "1.0.1";
 
         public static ValgrindPlugin Instance { get; private set; } = null!;
         public static ManualLogSource Log { get; private set; } = null!;
